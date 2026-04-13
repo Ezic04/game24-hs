@@ -70,7 +70,6 @@ printBanner randNumsStr = do
   putStrLn "---------------------------------------"
   putStrLn $ "Nums: " ++ randNumsStr
   putStrLn "---------------------------------------"
-
   where
     binary = csShow (enumerate :: [BinOpType])
     unary = csShow (enumerate :: [UnrOpType])

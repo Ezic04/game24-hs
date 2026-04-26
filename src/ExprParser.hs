@@ -4,7 +4,6 @@ import Control.Monad.Combinators.Expr (Operator, makeExprParser)
 import Expr (BinOpType (..), Expr (..), ExprNat, UnrOpType (..))
 import ParserUtils (Parser, binaryL, binaryR, lexeme, parens, postfix, prefix, spaceConsumer, symbol)
 import Text.Megaparsec (MonadParsec (eof), some, (<?>), (<|>))
-import Text.Megaparsec.Char (space, string)
 import Text.Megaparsec.Char.Lexer qualified as L
 
 pLit :: Parser ExprNat

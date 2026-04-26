@@ -4,18 +4,17 @@ import Control.Category ((>>>))
 import Control.Monad (replicateM)
 import Control.Monad.Reader (ReaderT, ask, lift, runReaderT)
 import Data.Bifunctor (Bifunctor (first))
-import Data.Enum (enumerate)
+import Data.Char (toLower)
 import Data.Foldable (toList)
 import Data.List (intercalate)
-import Data.MultiSet (MultiSet, (\\), fromList)
+import Data.MultiSet (MultiSet, fromList, (\\))
 import Data.Text (pack)
-import Expr (BinOpType, ExprNat, UnrOpType, eval)
+import Expr (BinOpType, ExprNat, UnrOpType, enumerate, eval)
 import ExprParser (pExprEof)
 import Numeric.Natural (Natural)
 import System.Console.Haskeline (defaultSettings, getInputLine, runInputT)
 import System.Random (randomRIO)
 import Text.Megaparsec (errorBundlePretty, parse)
-import Data.Char (toLower)
 
 data Command
   = ExprStr String
@@ -27,8 +26,8 @@ data RoundResult
   | Rerolled
   | Aborted
 
-data AttemptResult 
-  = Success 
+data AttemptResult
+  = Success
   | Failure
 
 type RoundM a = ReaderT (MultiSet Natural) IO a
@@ -44,14 +43,14 @@ gameLoop = do
     Aborted -> return ()
     Rerolled -> gameLoop
     Won -> readPlayAgain
- 
+
 readPlayAgain :: IO ()
 readPlayAgain = runInputT defaultSettings $ do
-      minput <- getInputLine "Do you want to play again? [y/n]"
-      case minput of
-        Just input | map toLower input `elem` ["y", "yes"] -> lift gameLoop
-        _ -> return ()
- 
+  minput <- getInputLine "Do you want to play again? [y/n]"
+  case minput of
+    Just input | map toLower input `elem` ["y", "yes"] -> lift gameLoop
+    _ -> return ()
+
 playRound :: IO RoundResult
 playRound = do
   randsInt <- replicateM 4 $ randomRIO (1, 9 :: Int)
@@ -64,9 +63,9 @@ printBanner :: String -> IO ()
 printBanner randNumsStr = do
   putStr "\n"
   putStrLn "--------------- GAME 24 ---------------"
-  putStrLn $ "Goal: Reach 24 using each number once."
+  putStrLn "Goal: Reach 24 using each number once."
   putStrLn $ "Ops:  [ " ++ binary ++ " ]   [ " ++ unary ++ " ]"
-  putStrLn $ "Cmds: [:r] Reroll   [:q] Quit"
+  putStrLn "Cmds: [:r] Reroll   [:q] Quit"
   putStrLn "---------------------------------------"
   putStrLn $ "Nums: " ++ randNumsStr
   putStrLn "---------------------------------------"

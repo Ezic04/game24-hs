@@ -51,3 +51,6 @@ eval (BinOp opType e1 e2) = do
     op = applyBin opType
 
 type ExprNat = Expr Natural
+
+enumerate :: (Bounded a, Enum a) => [a]
+enumerate = [minBound .. maxBound]

@@ -8,18 +8,26 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
+        
+        haskellPackages = pkgs.haskell.packages.ghc910;
+
+        project = haskellPackages.callCabal2nix "game24-hs" ./. {
+          inherit (pkgs) zlib;
+        };
       in
       {
-        devShells.default = pkgs.mkShell {
-          nativeBuildInputs = [
+        packages.default = project;
+
+        devShells.default = haskellPackages.shellFor {
+          packages = p: [ project ];
+          nativeBuildInputs = with pkgs; [
+            haskellPackages.cabal-install
+            haskellPackages.haskell-language-server
             pkgs.bashInteractive
-            pkgs.haskell.compiler.ghc910
-            pkgs.haskell-language-server
-            pkgs.cabal-install
             pkgs.pkg-config
           ];
-          buildInputs = [
-            pkgs.zlib
+          buildInputs = with pkgs; [
+            zlib
           ];
         };
       });
